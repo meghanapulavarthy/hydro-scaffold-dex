@@ -4,7 +4,7 @@ import { loadMarkets, loadTradeHistory } from './actions/markets';
 import Header from './components/Header';
 import WebsocketConnector from './components/WebsocketConnector';
 import OrderBook from './components/Orderbook';
-import Trade from './components/Trade';
+//import Trade from './components/Trade';
 import Wallet from './components/Wallet';
 import Orders from './components/Orders';
 import Charts from './components/Charts';
@@ -116,9 +116,9 @@ class App extends React.PureComponent {
   renderMobile() {
     const selectTab = this.state.mobileTab;
     let content;
-    if (selectTab === 'trade' || !selectTab) {
+   /* if (selectTab === 'trade' || !selectTab) {
       content = <Trade />;
-    } else if (selectTab === 'orders') {
+    } else*/ if (selectTab === 'orders') {
       content = <Orders />;
     } else if (selectTab === 'charts') {
       content = <Charts />;
@@ -203,7 +203,7 @@ class App extends React.PureComponent {
       <div className="flex flex-1 overflow-hidden">
         <div className="flex-column border-right">
           <div className="grid flex-1">
-            <Trade />
+            
           </div>
         </div>
         <div className="flex-column">
@@ -236,7 +236,7 @@ class App extends React.PureComponent {
       <div className="flex flex-1 overflow-hidden">
         <div className="flex-column border-right">
           <div className="grid flex-1">
-            <Trade />
+           
           </div>
         </div>
         <Fold className="grid border-right flex-column">
@@ -268,7 +268,7 @@ class App extends React.PureComponent {
         <div className="flex">
           <div className="flex-column flex-1 border-right">
             <div className="grid flex-1">
-              <Trade />
+              
             </div>
           </div>
           <div className="grid border-right flex-column">

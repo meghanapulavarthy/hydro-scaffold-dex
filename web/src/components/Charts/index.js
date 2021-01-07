@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { DeepChart, TradeChart } from '@wangleiddex/hydro-sdk-charts';
-// import { testData } from './constants'; # we can use testData to show what TradeChart looks like
+import '@wangleiddex/hydro-sdk-charts/dist/style.css';
+import { testData } from './constants'; //# we can use testData to show what TradeChart looks like
 import api from '../../lib/api';
+
 
 class Charts extends React.Component {
   constructor(props) {
@@ -10,7 +12,7 @@ class Charts extends React.Component {
     this.tradeChartWrapper = React.createRef();
 
     this.state = {
-      granularityStr: window.localStorage.getItem('granularityStr') || '1d',
+      granularityStr: window.localStorage.getItem('granularityStr'),
       loading: false,
       noData: false,
       data: [],
@@ -136,38 +138,38 @@ class Charts extends React.Component {
     let granularityNum;
     to = to || Math.floor(new Date().getTime() / 1000);
     switch (granularityStr) {
-      // case "1m":
-      //   granularityNum = 60;
-      //   from = from || to - 60 * 60 * 24 * 365 / 60; // 356 * 24 points, from 6 days ago;
-      //   break;
+      case "1m":
+        granularityNum = 60;
+        from = from || to - 60 * 60 * 24 * 365 / 60; // 356 * 24 points, from 6 days ago;
+        break;
       case '5m':
         granularityNum = 60 * 5;
         from = from || to - (60 * 60 * 24 * 365) / 12; // 356 * 24 points, from 1 month ago
         break;
-      // case "15m":
-      //   granularityNum = 60 * 15;
-      //   from = from || to - 60 * 60 * 24 * 365 / 4; // 356 * 24 points, from 3 month ago
-      //   break;
+      case "15m":
+        granularityNum = 60 * 15;
+        from = from || to - 60 * 60 * 24 * 365 / 4; // 356 * 24 points, from 3 month ago
+        break;
       case '1h':
         granularityNum = 60 * 60;
         from = from || to - 60 * 60 * 24 * 365; // 356 * 24 points, from 1 year ago
         break;
-      // case "6h":
-      //   granularityNum = 60 * 60 * 6;
-      //   from = from || to - 60 * 60 * 24 * 365; // 356 * 4 points, from 1 year ago
-      //   break;
+      case "6h":
+        granularityNum = 60 * 60 * 6;
+        from = from || to - 60 * 60 * 24 * 365; // 356 * 4 points, from 1 year ago
+        break;
       case '1d':
         granularityNum = 60 * 60 * 24;
         from = from || to - 60 * 60 * 24 * 365; // 356 points, from 1 year ago
         break;
-      // case "1w":
-      //   granularityNum = 60 * 60 * 24 * 7;
-      //   from = from || to - 60 * 60 * 24 * 365; // 52 points, from 1 year ago
-      //   break;
-      // case "1mon":
-      //   granularityNum = 60 * 60 * 24 * 30;
-      //   from = from || to - 60 * 60 * 24 * 365; // 12 points, from 1 year ago
-      //   break;
+      case "1w":
+        granularityNum = 60 * 60 * 24 * 7;
+        from = from || to - 60 * 60 * 24 * 365; // 52 points, from 1 year ago
+        break;
+      case "1mon":
+        granularityNum = 60 * 60 * 24 * 30;
+        from = from || to - 60 * 60 * 24 * 365; // 12 points, from 1 year ago
+        break;
       default:
         // same as 1d
         granularityNum = 60 * 60 * 24;
@@ -211,9 +213,12 @@ class Charts extends React.Component {
           </div>
         </div>
 
+       
+      
+
         <div className="flex-column flex-1 ">
           <div className="grid flex-2" ref={this.tradeChartWrapper}>
-            <TradeChart
+            {/* <TradeChart
               theme="light"
               data={this.state.data}
               priceDecimals={5}
@@ -230,22 +235,25 @@ class Charts extends React.Component {
               }}
               start={this.state.start}
               end={this.state.end}
-            />
+            /> */}
+             <TradeChart
+  theme="light"
+  data={testData}
+  granularityStr={this.state.granularityStr}
+  priceDecimals={4}
+  styles={{ upColor: '#00d99f', downColor: '#ff6f75', background: '#FFFFFF'}}
+  clickCallback={result => {
+    console.log('result: ', result);
+  }}
+  clickGranularity={result => {
+    this.loadData(result.value);
+    window.localStorage.setItem('granularityStr', result.value);
+
+    console.log('result: ', result);
+  }}
+/>
           </div>
-          <div className="grid flex-1 border-top">
-            <DeepChart
-              baseToken="HOT"
-              quoteToken="DAI"
-              styles={{ bidColor: '#00d99f', askColor: '#ff6f75', rowBackgroundColor: '#FFFFFF' }}
-              asks={asks}
-              bids={bids}
-              priceDecimals={5}
-              theme="light"
-              clickCallback={result => {
-                console.log('result: ', result);
-              }}
-            />
-          </div>
+          
         </div>
       </>
     );

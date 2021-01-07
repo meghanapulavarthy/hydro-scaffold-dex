@@ -3,6 +3,7 @@ import OpenOrders from './OpenOrders';
 import Trades from './Trades';
 import Selector from '../Selector';
 import './styles.scss';
+import Trade from '../Trade';
 
 const OPTIONS = [{ value: 'openOrders', name: 'Open' }, { value: 'filled', name: 'Filled' }];
 
@@ -17,7 +18,8 @@ class Orders extends React.PureComponent {
     const { selectedAccountID } = this.state;
     return (
       <>
-        <div className="title flex justify-content-between align-items-center">
+      <Trade/>
+        {/* <div className="title flex justify-content-between align-items-center">
           <div>
             <div>Orders</div>
             <div className="text-secondary">View your open orders</div>
@@ -30,7 +32,7 @@ class Orders extends React.PureComponent {
             }}
           />
         </div>
-        {selectedAccountID === 'openOrders' ? <OpenOrders /> : <Trades />}
+        {selectedAccountID === 'openOrders' ? <OpenOrders /> : <Trades />} */}
       </>
     );
   }

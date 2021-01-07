@@ -39,7 +39,7 @@ export const calculateTrade = ({
       .plus(tradeFeeAfterDiscount)
       .plus(gasFeeAmount)
       .dp(priceDecimals, BigNumber.ROUND_UP);
-  } else {
+  } else{
     totalQuoteTokens = subtotal
       .minus(tradeFeeAfterDiscount)
       .minus(gasFeeAmount)

@@ -7,25 +7,30 @@ class OrderBook extends React.Component {
     super(props);
     this.lastUpdatedAt = null;
     this.forceRenderTimer = null;
+
+    
+  
   }
+
+
 
   // max 1 render in 1 second
-  shouldComponentUpdate() {
-    if (this.lastUpdatedAt) {
-      const diff = new Date().valueOf() - this.lastUpdatedAt;
-      const shouldRender = diff > 1000;
+  // shouldComponentUpdate() {
+  //   if (this.lastUpdatedAt) {
+  //     const diff = new Date().valueOf() - this.lastUpdatedAt;
+  //     const shouldRender = diff > 1000;
 
-      if (!shouldRender && !this.forceRenderTimer) {
-        this.forceRenderTimer = setTimeout(() => {
-          this.forceUpdate();
-          this.forceRenderTimer = null;
-        }, 1000 - diff);
-      }
-      return shouldRender;
-    } else {
-      return true;
-    }
-  }
+  //     if (!shouldRender && !this.forceRenderTimer) {
+  //       this.forceRenderTimer = setTimeout(() => {
+  //         this.forceUpdate();
+  //         this.forceRenderTimer = null;
+  //       }, 1000 - diff);
+  //     }
+  //     return shouldRender;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
   componentWillUnmount() {
     if (this.forceRenderTimer) {
@@ -37,32 +42,75 @@ class OrderBook extends React.Component {
     this.lastUpdatedAt = new Date();
   }
 
+  
+
   render() {
+  
     let { bids, asks, websocketConnected, currentMarket } = this.props;
 
-    return (
-      <div className="orderbook flex-column flex-1">
-        <div className="flex header text-secondary">
-          <div className="col-6 text-right">Amount</div>
-          <div className="col-6 text-right">Price</div>
-        </div>
-        <div className="flex-column flex-1">
-          <div className="asks flex-column flex-column-reverse flex-1 overflow-hidden">
-            {asks
+    const sell = () => {
+      
+      asks
               .slice(-20)
               .reverse()
               .toArray()
               .map(([price, amount]) => {
                 return (
-                  <div className="ask flex align-items-center" key={price.toString()}>
+                  <div className="bids flex-column flex-1 overflow-hidden" >
+                    <div className="ask flex align-items-center" key={price.toString()}>
                     <div className="col-6 orderbook-amount text-right">
                       {amount.toFixed(currentMarket.amountDecimals)}
                     </div>
                     <div className="col-6 text-danger text-right">{price.toFixed(currentMarket.priceDecimals)}</div>
                   </div>
+                  </div>
+                  
                 );
-              })}
-          </div>
+              })
+    }
+
+  const  buy = () => {
+      bids
+              .slice(0, 20)
+              .toArray()
+              .map(([price, amount]) => {
+                return (
+                  <div className="asks flex-column flex-column-reverse flex-1 overflow-hidden">
+                    <div className="bid flex align-items-center" key={price.toString()}>
+                    <div className="col-6 orderbook-amount text-right">
+                      {amount.toFixed(currentMarket.amountDecimals)}
+                    </div>
+                    <div className="col-6 text-success text-right">{price.toFixed(currentMarket.priceDecimals)}</div>
+                  </div>
+                  </div>
+                  
+                  
+                );
+                
+              })
+    }
+
+ 
+   
+
+    
+
+
+
+    return (
+      <div className="orderbook flex-column flex-1">
+        <div class="btns">
+        <button id="all" onClick={buy()}>All</button>
+        <button id="buy" onClick={buy()}>Buy</button>
+        <button id="sell" onClick={sell()}>sell</button>
+        </div>
+        
+        <div className="flex header text-secondary">
+          <div className="col-6 text-right">Amount</div>
+          <div className="col-6 text-right">price</div>
+        </div>
+        <div className="flex-column flex-1">
+         
           <div className="status border-top border-bottom">
             {websocketConnected ? (
               <div className="col-6 text-success">
@@ -74,21 +122,9 @@ class OrderBook extends React.Component {
               </div>
             )}
           </div>
-          <div className="bids flex-column flex-1 overflow-hidden">
-            {bids
-              .slice(0, 20)
-              .toArray()
-              .map(([price, amount]) => {
-                return (
-                  <div className="bid flex align-items-center" key={price.toString()}>
-                    <div className="col-6 orderbook-amount text-right">
-                      {amount.toFixed(currentMarket.amountDecimals)}
-                    </div>
-                    <div className="col-6 text-success text-right">{price.toFixed(currentMarket.priceDecimals)}</div>
-                  </div>
-                );
-              })}
-          </div>
+          {/* <div className="bids flex-column flex-1 overflow-hidden" >
+            
+          </div> */}
         </div>
       </div>
     );
