@@ -1,117 +1,71 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './styles.scss';
+import Buy from './Buy';
+import Sell from './Sell';
 
 class OrderBook extends React.Component {
   constructor(props) {
     super(props);
-    this.lastUpdatedAt = null;
-    this.forceRenderTimer = null;
 
+    this.state = {
+      name: "All",
+      valsell:false,
+      valbuy:false,
+      valall:true
+    };
     
-  
+  }
+  all = () => {
+    this.setState({name:"all"});
+    this.setState({valbuy:true});
+    this.setState({valsell:true});
+    this.setState({valall:false});
+
+  }
+  buy = () => {
+    this.setState({name:"Buy"});
+    this.setState({valbuy:true});
+    this.setState({valsell:false});
+    this.setState({valall:false});
+  }
+  sell = () => {
+    this.setState({name:"Sell"});
+    this.setState({valsell:true});
+    this.setState({valbuy:false});
+    this.setState({valall:false});
   }
 
 
-
-  // max 1 render in 1 second
-  // shouldComponentUpdate() {
-  //   if (this.lastUpdatedAt) {
-  //     const diff = new Date().valueOf() - this.lastUpdatedAt;
-  //     const shouldRender = diff > 1000;
-
-  //     if (!shouldRender && !this.forceRenderTimer) {
-  //       this.forceRenderTimer = setTimeout(() => {
-  //         this.forceUpdate();
-  //         this.forceRenderTimer = null;
-  //       }, 1000 - diff);
-  //     }
-  //     return shouldRender;
-  //   } else {
-  //     return true;
-  //   }
-  // }
-
-  componentWillUnmount() {
-    if (this.forceRenderTimer) {
-      clearInterval(this.forceRenderTimer);
-    }
-  }
-
-  componentDidUpdate() {
-    this.lastUpdatedAt = new Date();
-  }
-
-  
 
   render() {
-  
     let { bids, asks, websocketConnected, currentMarket } = this.props;
-
-    const sell = () => {
-      
-      asks
-              .slice(-20)
-              .reverse()
-              .toArray()
-              .map(([price, amount]) => {
-                return (
-                  <div className="bids flex-column flex-1 overflow-hidden" >
-                    <div className="ask flex align-items-center" key={price.toString()}>
-                    <div className="col-6 orderbook-amount text-right">
-                      {amount.toFixed(currentMarket.amountDecimals)}
-                    </div>
-                    <div className="col-6 text-danger text-right">{price.toFixed(currentMarket.priceDecimals)}</div>
-                  </div>
-                  </div>
-                  
-                );
-              })
-    }
-
-  const  buy = () => {
-      bids
-              .slice(0, 20)
-              .toArray()
-              .map(([price, amount]) => {
-                return (
-                  <div className="asks flex-column flex-column-reverse flex-1 overflow-hidden">
-                    <div className="bid flex align-items-center" key={price.toString()}>
-                    <div className="col-6 orderbook-amount text-right">
-                      {amount.toFixed(currentMarket.amountDecimals)}
-                    </div>
-                    <div className="col-6 text-success text-right">{price.toFixed(currentMarket.priceDecimals)}</div>
-                  </div>
-                  </div>
-                  
-                  
-                );
-                
-              })
-    }
-
- 
-   
-
-    
-
-
-
     return (
-      <div className="orderbook flex-column flex-1">
-        <div class="btns">
-        <button id="all" onClick={buy()}>All</button>
-        <button id="buy" onClick={buy()}>Buy</button>
-        <button id="sell" onClick={sell()}>sell</button>
+      <div>
+        <div className="btn">
+        <div id="all" onClick = {this.all}>All</div>
+       
+        <div id="buy" onClick = {this.buy}>Buy</div>
+        <div id="sell" onClick = {this.sell}>Sell</div>
+        </div>
+       
+        <div className="orderbook flex-column flex-1">
+        <div className="flex header text-secondary">
+          <div id="nums">
+          <div className="col-6 text-right" >Amount</div>
+          <div className="col-6 text-right" id="price">Price</div>
+          <div className="col-6 text-right" id="total">Total</div>
+          </div>
+          
         </div>
         
-        <div className="flex header text-secondary">
-          <div className="col-6 text-right">Amount</div>
-          <div className="col-6 text-right">price</div>
-        </div>
-        <div className="flex-column flex-1">
-         
-          <div className="status border-top border-bottom">
+        
+
+        {this.state.valall ? <Buy bids={bids} asks={asks} websocketConnected={websocketConnected} currentMarket={currentMarket}/> : null}
+       
+        {this.state.valbuy ? <Buy bids={bids} asks={asks} websocketConnected={websocketConnected} currentMarket={currentMarket}/> : null}
+
+        <div className="status border-top border-bottom">
             {websocketConnected ? (
               <div className="col-6 text-success">
                 <i className="fa fa-circle" aria-hidden="true" /> RealTime
@@ -122,16 +76,17 @@ class OrderBook extends React.Component {
               </div>
             )}
           </div>
-          {/* <div className="bids flex-column flex-1 overflow-hidden" >
-            
-          </div> */}
+          {this.state.valall ? <Sell bids={bids} asks={asks} websocketConnected={websocketConnected} currentMarket={currentMarket}/> : null}
+        {this.state.valsell ? <Sell bids={bids} asks={asks} websocketConnected={websocketConnected} currentMarket={currentMarket}/> : null}
         </div>
       </div>
     );
   }
+
+  
 }
 
-const mapStateToProps = state => {
+ const mapStateToProps = state => {
   return {
     asks: state.market.getIn(['orderbook', 'asks']),
     bids: state.market.getIn(['orderbook', 'bids']),
@@ -140,6 +95,6 @@ const mapStateToProps = state => {
     websocketConnected: state.config.get('websocketConnected'),
     theme: state.config.get('theme')
   };
-};
+}; 
 
 export default connect(mapStateToProps)(OrderBook);

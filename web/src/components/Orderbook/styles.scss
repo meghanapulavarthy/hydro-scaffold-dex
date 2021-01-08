@@ -14,21 +14,82 @@
     }
 }
 
-#all{
-    margin-right: 30px;
-    border:0px;
-    width:100px;
-
+.btn{
+    display: flex;
+    flex-direction: row;
 }
-#sell{
-    margin-right: 30px;
-    border:0px;
-    width:100px;
+
+#all{
+    width: 70px;
+    height:30px;
+    background-color: white;
+    text-decoration: none;
+    border-width:0px;
+    border-bottom-style:solid;
+    border-bottom-color:rgb(82,90,238);
+    color:rgb(82,90,238);
+    cursor: pointer;
+}
+
+#all:active{
+    border-bottom-width: 2px;
 }
 
 #buy{
-    margin-right: 30px;
-    border:0px;
-    width:100px;
+    width: 70px;
+    height:30px;
+    background-color: white;
+    text-decoration: none;
+    border-width:0px;
+    border-bottom-style:solid;
+    border-bottom-color:rgb(82,90,238);
+    color:rgb(82,90,238);
+    cursor: pointer;
 }
 
+#buy:active{
+    border-bottom-width: 2px;
+}
+
+#amount{
+    margin-left: 40px;
+}
+
+#price{
+    margin-left: 20px;
+}
+
+#sell{
+    width: 70px;
+    height:30px;
+    background-color: white;
+    text-decoration: none;
+    border-width:0px;
+    border-bottom-style:solid;
+    border-bottom-color:rgb(82,90,238);
+    color:rgb(82,90,238);
+    cursor: pointer;
+
+}
+#sell:active{
+    border-bottom-width: 2px;
+}
+
+
+#some{
+    display: flex;
+    flex-direction: row;
+}
+
+#amount{
+    margin-right: 50px;
+}
+
+#nums{
+    display: flex;
+    flex-direction: row;
+}
+
+#total{
+    margin-left: -40px;
+}
